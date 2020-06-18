@@ -1,2 +1,8 @@
 Week 1: I formed a group with my friends. We had a discussion on which project we will do after going through all the projects
 provided. At last,we choose 'ReadRecommend' as our project to do. Wish we all have fun during the development of this project.
+
+Week 2: We got the first task that we have to finish our proposal before the due date which is the end of week 3. Our Scurm
+master Xiuye allocate our work and make a simple plan. I start my part which is 'System Architecture'.
+
+Week 3: I finished my part and ask questions during labs on Thursday. I tried to make a demo of our project with the help on
+Jetbrain Website.
