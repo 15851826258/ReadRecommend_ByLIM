@@ -4,7 +4,7 @@ courses in semester 3, 2020 and guarantee the study qualify.
 
 week 2
 Xinchen Wang, Xiuye Yuan, Yifan Wang, Daifei Zhang and I discussed the 8 projects and decided to choose the project
-ReadRecommend together. We chose Xiuye Yuan to be our leader. And we planed to collect some information about how to
+ReadRecommend together. We chose Xiuye Yuan to be our scrum master. And we planed to collect some information about how to
 finish our project and prepare the proposal.
 
 week 3
