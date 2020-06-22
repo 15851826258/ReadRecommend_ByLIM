@@ -6,3 +6,5 @@ master Xiuye allocate our work and make a simple plan. I start my part which is 
 
 Week 3: I finished my part and ask questions during labs on Thursday. I tried to make a demo of our project with the help on
 Jetbrain Website.
+
+Week 4: I develop a demo of our projects backend and upload it to Git.
