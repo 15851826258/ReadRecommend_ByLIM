@@ -1,0 +1,6 @@
+Diary
+Week1: My friends and me formed the group. We had discussed different aspects of those project. Then, we chose the most suitable one - ReadRecommend.
+Week2:
+Everyone is already familiar with the requirement of ReadRecommend. We discussed a lot about the topic, including languages that we will use later, functions that we should achieve , project division. Our scrum master write a frame of our proposal.
+Week3:
+Xiuye and me finished the ‘Objectives’ part of the proposal. Also, we discussed Recommendation modes specifically.Then, we integrated our proposal.
