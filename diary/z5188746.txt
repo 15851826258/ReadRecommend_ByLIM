@@ -13,3 +13,8 @@ architecture and flow chats part. We will discuss which tools and framework we a
 
 week 4
 We taught ourselves Django framework and focus on the individual task on jira. We finished the register and login part.
+And we look up some materials to fix the problem about how to transfer the parameters from the Frontend to the Backend.
+
+week 5
+We now focus on the Frontend code to beautify our website. But none of us learned any knowledge about the frontend code,
+like css, html or js. It's very difficult for us.
