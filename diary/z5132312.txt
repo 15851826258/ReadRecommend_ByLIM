@@ -6,3 +6,9 @@ We had a discussion about our proposal, we divided it into some parts and each g
 
 Week 3
 I finished my part and our group made the final version proposal. I thought about the database, maybe use the mongodb + mongoengine ORM to build the model is a good choice. Next week I will have a discussion with my teammates to decide which tools are good choices for us to finish this project.
+
+Week 4
+I used to decided database：mongodb + mongoengine ORM to build the modle, back end processing：flask + jwt + pycryptodome (enctyption)+ Pillow (picture),leading end：axios + vue.js + element ui. However, after finishing discussion with my teammate, I changed my choice. I need to learn the tools which they decided to use for the project.
+
+Week 5
+I learnd something for the new tools with the help from my team numbers, but it is diffcult for me to change and make my team numbers codes better, so I did a vision by my self based on some basic code from my teammates. Next week, I will do more functions.
