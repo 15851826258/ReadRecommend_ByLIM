@@ -9,3 +9,11 @@ Assigned the project tasks to every team member. Prepared project proposal writi
 Week 3
 
 Perfected the user story at backlog and the first sprint on Jira. Written the first 4 parts of user stories and presented details of them on proposal, Daifei is responsible for the last three objectives. Meeting with my team member for up coming tasks.
+
+Week4
+
+According to team's discussion, we decided to use Django do our project. This week I was mainly focus on studying it. I tried to build a simple login&register front-end with Xinchen's assistance.
+
+Week5
+
+Based on the first sprint, we completed 5 user stories. And we did a demo. I tired to improve the Register&login system by adding input checking and email.
