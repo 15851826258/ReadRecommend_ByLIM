@@ -1,6 +1,11 @@
 Diary
-Week1: My friends and me formed the group. We had discussed different aspects of those project. Then, we chose the most suitable one - ReadRecommend.
+Week1:
+My friends and me formed the group. We had discussed different aspects of those project. Then, we chose the most suitable one - ReadRecommend.
 Week2:
 Everyone is already familiar with the requirement of ReadRecommend. We discussed a lot about the topic, including languages that we will use later, functions that we should achieve , project division. Our scrum master write a frame of our proposal.
 Week3:
 Xiuye and me finished the ‘Objectives’ part of the proposal. Also, we discussed Recommendation modes specifically.Then, we integrated our proposal.
+Week4： 
+We learned Django framework.Then, we tried to write a framework and we ran the code in Pycharm . The register and login part. Xinchen Wang designed a database structure and we discussed about it.
+Week5:
+We finished some basic part of the web: Login and Register, Collection, Book. The first demo had been displayed by Xiuye and Xinchen.
