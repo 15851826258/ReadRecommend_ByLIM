@@ -15,7 +15,7 @@ Week 5: I check out the new codes and do the Demo A. After Demo A we have a meet
 Week 6: Flexible week, I do some learning on the dynamic web design with Javascipt and modify the database configuration to 
 suit the development.
 
-Week 7: 
+Week 7: I try to beautify the pages and comment the backend code to make it readable.
 
 
 
