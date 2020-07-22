@@ -7,4 +7,17 @@ master Xiuye allocate our work and make a simple plan. I start my part which is 
 Week 3: I finished my part and ask questions during labs on Thursday. I tried to make a demo of our project with the help on
 Jetbrain Website.
 
-Week 4: I develop a demo of our projects backend and upload it to Git.
+Week 4: I develop a demo of our projects backend and upload it to Git. I help my teammates to set up the Django environment
+and have a discussion on the plan.
+
+Week 5: I check out the new codes and do the Demo A. After Demo A we have a meeting to discuss the plan.
+
+Week 6: Flexible week, I do some learning on the dynamic web design with Javascipt and modify the database configuration to 
+suit the development.
+
+Week 7: 
+
+
+
+
+
