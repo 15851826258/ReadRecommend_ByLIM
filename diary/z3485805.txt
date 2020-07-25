@@ -16,4 +16,16 @@ According to team's discussion, we decided to use Django do our project. This we
 
 Week5
 
-Based on the first sprint, we completed 5 user stories. And we did a demo. I tired to improve the Register&login system by adding input checking and email.
+Based on the first sprint, we completed 5 user stories. And I prepared the demo A. I tired to improve the Register&login system by adding input checking and email.
+
+Week6
+
+This week is flexible week, I did beatify work on login & register page by adding icons and check the logic within searching module parts.
+
+Week7
+
+Meeting with group member discussed the retrospective A. Did some interactive validations on adding reviews and ratings module.
+
+Week8
+
+Prepared Demo B.
