@@ -9,3 +9,11 @@ Week4：
 We learned Django framework.Then, we tried to write a framework and we ran the code in Pycharm . The register and login part. Xinchen Wang designed a database structure and we discussed about it.
 Week5:
 We finished some basic part of the web: Login and Register, Collection, Book. The first demo had been displayed by Xiuye and Xinchen.
+week 6
+This week is mid-term week without course materials, we can spend a lot of time to implement our project functions and we need to self-learn front-end code and algorithm. After finishing our demo A, we need to have a discussion about the things we weren't being done well for last few weeks and make some improvement about our future schedule.
+week 7
+It's a busy week. We need to spend a large amount of time to implement our project functions to prepare the demo B of our project at week 8. And when I implement the adding rating function, our team have some problems about transferring parameters from the front-end, so we need to do some research to solve that problem.
+week 8
+After demo B of our project, we need to discuss the things we weren't being done well for last few weeks and combine the things we weren't being done well from demo A retrospective to write the demo B retrospective report. And we also need to spend some time to finish the rest part of our project.
+week 9
+Our leader has drafted the final report for our project, and each of all got the assigned part of the final report, and we also discussed the problem we had when we implement the rest part of our project.
