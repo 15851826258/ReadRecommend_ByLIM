@@ -1,0 +1,86 @@
+.left-box {
+    margin-left: 5%;
+    width: 55%;
+    margin-right: 5%;
+    padding-right: 50px;
+    border-right: solid 1px lightgrey;
+    float: left;
+}
+
+
+.base-info-box {
+    overflow: hidden;
+}
+
+
+.img-box {
+    float: left;
+    margin-right: 50px;
+}
+
+.img-box img {
+    height: 200px;
+}
+
+.info-box {
+    width: 65%;
+}
+
+.info-box p{
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.panel-review {
+    margin-top: 50px;
+}
+
+.review-box {
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    border-bottom: solid 1px lightgrey;
+}
+
+.review-info {
+    font-style: italic;
+    color: lightgrey;
+    font-size: 14px;
+}
+
+.review-content {
+    font-size: 18px;
+}
+
+.right-box {
+    float: right;
+    width: 30%;
+    margin-right: 5%;
+}
+
+.rating-box {
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+    border-bottom: solid 1px lightgrey;
+    margin-top: 20px;
+}
+
+.rating-box img {
+    height: 20px;
+}
+
+.rating-star:hover {
+    cursor: pointer;
+}
+
+.record-finished {
+    color: darkgreen;
+}
+
+.record-reading {
+    color: darkorange;
+}
+
+.record-not_read {
+    color: darkred;
+}

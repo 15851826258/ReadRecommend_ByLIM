@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .left {
+            float: left;
+            margin-left: 10px;
+        }
+    </style>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/jquery/jquery.js"></script>
+</head>
+
+<body>
+    <div id="stars" class="left">
+        <img src="../../static/login/image/empty.png" alt="">
+        <img src="../../static/login/image/empty.png" alt="">
+        <img src="../../static/login/image/empty.png" alt="">
+        <img src="../../static/login/image/empty.png" alt="">
+        <img src="../../static/login/image/empty.png" alt="">
+    </div>
+    <div id="comment" class="left">
+
+    </div>
+
+    <script>
+        //制作一个星星评分
+        var divStars = document.getElementById("stars");
+        var divComment = document.getElementById("comment");
+        var attitude = ["差", "较差", "一般", "好", "很好"];
+        var starNum = -1; //记录当前第几颗星星被点击
+        var starArray = Array.from(divStars.children); //星星数组
+
+        //鼠标移入
+        divStars.onmouseover = function (e) {
+            if (e.target.tagName === "IMG") { //事件源是图片
+                //把鼠标移动到的星星替换图片
+                e.target.src = "../../static/login/image/shining.png";
+                //把鼠标移动到的星星之前的星星替换图片
+                var prev = e.target.previousElementSibling;
+                while (prev) {
+                    prev.src = "../../static/login/image/shining.png";
+                    prev = prev.previousElementSibling;
+                }
+                //把鼠标移动到的星星之后的星星替换图片
+                var next = e.target.nextElementSibling;
+                while (next) { //把鼠标移动到的星星之后的星星替换图片
+                    next.src = "../../static/login/image/empty.png";
+                    next = next.nextElementSibling;
+                }
+
+                var index = starArray.indexOf(e.target); //找到鼠标移动到的星星的序号
+                divComment.innerHTML = attitude[index]; //显示对应的评论
+            }
+        }
+
+        //鼠标点击
+        divStars.onclick = function (e) {
+            if (e.target.tagName === "IMG") {
+                //记录当前点击的星星序号
+                starNum = starArray.indexOf(e.target);
+            }
+            {#console.log(starNum);#}
+        }
+        document.getElementById('output').innerHTML = starNum;
+        localStorage.setItem('star', starNum);
+        $("#submit").on('click', function() {
+            var starNum = $("#starNum").val();
+            console.log(starNum);
+            $.ajax({
+               type: "POST",
+               url: "/test/",
+               data: { "starNum": starNum},
+               {# data:"starNum",#}
+               success: function(data)
+               {
+                   alert("data");
+               },
+               error: function(data) {
+                   alert(data);
+               }
+            });
+        });
+        //鼠标移出
+        divStars.onmouseout = function (e) {
+            {#console.log(starNum);#}
+            if (starNum !== -1) { //鼠标点击事件发生，将评分固定在点击的星星上
+                for (var i = 0; i < divStars.children.length; i++) {
+                    if (i <= starNum) {
+                        divStars.children[i].src = "../../static/login/image/shining.png";
+
+                    } else {
+                        divStars.children[i].src = "../../static/login/image/empty.png";
+                    }
+                }
+                divComment.innerHTML = attitude[starNum]; //显示对应的评论
+            } else {
+                for (var i = 0; i < divStars.children.length; i++) {
+                    divStars.children[i].src = "../../static/login/image/empty.png";
+                }
+                divComment.innerHTML = ""; //不显示评论
+            }
+
+        }
+
+    </script>
+    <p id = "output"></p>
+    <button type="button"  id = "submit">submit</button>
+{#    <button>请点击这里</button>#}
+{#     <form action="" method="post" id="form1">#}
+{#         mark：<input type="text" name="username">#}
+{#         <span id="usernameSpan"></span>#}
+{#         <br/>密码：<input type="password" name="password">#}
+{#         <span id="passowrdSpan"></span>#}
+{#         <br/>#}
+{#         <input type="submit" value="注册">#}
+{##}
+{#     </form>#}
+</body>
+
+</html>

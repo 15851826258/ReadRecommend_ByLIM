@@ -16,5 +16,26 @@ We taught ourselves Django framework and focus on the individual task on jira. W
 And we look up some materials to fix the problem about how to transfer the parameters from the Frontend to the Backend.
 
 week 5
-We now focus on the Frontend code to beautify our website. But none of us learned any knowledge about the frontend code,
-like css, html or js. It's very difficult for us.
+We now focus on the Front-end code to beautify our website. But none of us learned any knowledge about the frontend code,
+like css, html or js. It's very difficult for us. And we need to push the process of project to prepare the demo A of
+our project.
+
+week 6
+Mid-term week, we can spend a lot of time to implement our project and try to finish our demo A required sprints, and we
+can also self-learn some front-end code and structure. After finishing our demo A, we can slow down the process of our
+project and try to spend some time on our other courses'assignment, and we have a discussion about the things we weren't
+ being done well and some improvement about our schedule.
+
+week 7
+We also spend a lot of time to push the process of our project to prepare the demo B of our project. And when we implement
+the adding rating function, we encounter some difficulties about transferring parameters from the front-end. We need to
+do some research to solve that problem.
+
+week 8
+After demo B of our project, we need to discuss the things we weren't being done well at last few weeks and combine the
+demo A retrospective to write a report. And we also need to distribute some time on other courses' assignments. And we
+also need to finish the rest part of our project. So, it's really stressful and busy week.
+
+week 9
+We need to draft the final report for our project, and we still need to discuss the problem we encountered when we implement
+the rest part of our project and finish our demo B retrospective.

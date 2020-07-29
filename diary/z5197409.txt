@@ -17,6 +17,12 @@ suit the development.
 
 Week 7: I try to beautify the pages and comment the backend code to make it readable.
 
+Week 8: I make good preparation for the Demo B and did it well. I also generate the test sql and add comments to codes.
+
+Week 9: I am in charge of the 'Data preparation' and 'User doucument' part of the final report. I wrote the ReadMe file and the requirement.txt file.
+
+Week 10: I make preparation for the final Demo and collected the codes to upload it to the Git.
+
 
 
 
