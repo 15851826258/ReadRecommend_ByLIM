@@ -61,43 +61,47 @@
     </div>
     <div class="container">
         {% if Rated %}
-            <h1>Books You've Read at This Month:</h1>
+            <h1><font size="5">Books You've Read at This Month:</font></h1>
         {% else %}
-            <h1>Books in Collection {{ collection_name }}:</h1>
+            <h1><font size="5">Books in {{ collection_name }}:</font></h1>
         {% endif %}
         <table class="table table-hover">
           <thead>
             <tr>
-                <th>title</th>
-                <th>author</th>
-                <th>category</th>
-                <th>publisher</th>
-                <th>publication date</th>
-                <th>rating</th>
-                <th>popularity</th>
-                <th>detail</th>
+                <th style="text-align:center;">title</th>
+                <th style="text-align:center;">author</th>
+                <th style="text-align:center;">category</th>
+                <th style="text-align:center;">publisher</th>
+                <th style="text-align:center;">publication date</th>
+                <th style="text-align:center;">rating</th>
+                <th style="text-align:center;">popularity</th>
+                <th style="text-align:center; width: 130px">operation</th>
             </tr>
           </thead>
           <tbody>
               {% for book in all %}
                   <tr>
-                      <td>{{ book.BkTitle }}</td>
-                      <td>{{ book.BkAuthor }}</td>
-                      <td>{{ book.Category }}</td>
-                      <td>{{ book.BkPublisher }}</td>
-                      <td>{{ book.BkPubDate }}</td>
-                      <td>{{ book.Rating }}</td>
-                      <td>{{ book.Popularity }}</td>
+                      <td style="text-align:center;">{{ book.BkTitle }}</td>
+                      <td style="text-align:center;">{{ book.BkAuthor }}</td>
+                      <td style="text-align:center;">{{ book.Category }}</td>
+                      <td style="text-align:center;">{{ book.BkPublisher }}</td>
+                      <td style="text-align:center;">{{ book.BkPubDate }}</td>
+                      <td style="text-align:center;">{{ book.Rating }}</td>
+                      <td style="text-align:center;">{{ book.Popularity }}</td>
                       <td>
-                          <a href="/Bkdetail/?id={{ book.BkId }}@{{ collection_id }}" class="btn btn-success btn-sm" style="float:left;margin-right: 20px">detail</a>
+                        <div align="lest" style="float: left">
+                          <a href="/Bkdetail/?id={{ book.BkId }}@{{ collection_id }}" class="btn btn-success btn-sm">detail</a>
+                        </div>
+                        <div align="right">
                           {% if collection_id %}
                               <form action="/deleteBk/?id={{ book.BkId }}@{{ collection_id }}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="book_id" value="{{ book.id }}">
                                 <input type="hidden" name="collection_id" value="{{ collection_id }}">
-                                <input type="submit" class="btn btn-danger btn-sm" value="remove">
+                                <input type="submit" class="btn btn-danger btn-sm form-group" value="remove">
                               </form>
                           {%    endif    %}
+                        </div>
                       </td>
                   </tr>
               {% endfor %}

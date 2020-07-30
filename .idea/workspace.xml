@@ -2,34 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b85a232-16f3-4a83-854a-7bd1583aa22b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/COMP9900/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900/asgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900/wsgi.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/migrations/0002_user_recommend_model.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/migrations/0003_user_last_add.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/migrations/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/loginfail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/loginsuccess.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/profile.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/regist.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/search.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/userpage.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/manage.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/capstone-project-lim.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/capstone-project-lim.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/COMP9900_LIM/migrations/0004_auto_20200730_2231.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/COMP9900_LIM/templates/login/test.html" beforeDir="false" afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/test的副本.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMP9900_LIM/Sample_sql_script/Book.sql" beforeDir="false" afterPath="$PROJECT_DIR$/COMP9900_LIM/Sample_sql_script/Book.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMP9900_LIM/static/login/css/search.css" beforeDir="false" afterPath="$PROJECT_DIR$/COMP9900_LIM/static/login/css/search.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMP9900_LIM/templates/login/Userdetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/Userdetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMP9900_LIM/templates/login/codetail.html" beforeDir="false" afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/codetail.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMP9900_LIM/templates/login/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMP9900_LIM/templates/login/search.html" beforeDir="false" afterPath="$PROJECT_DIR$/COMP9900_LIM/templates/login/search.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/COMP9900_LIM/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/COMP9900_LIM/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -48,7 +31,23 @@
     <option name="HIDDEN_KINDS">
       <set />
     </option>
-    <expand />
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="demo@localhost" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="demo@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="demo@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="demo: schema" type="76f4a085:MysqlImplModel$Schema" />
+      </path>
+    </expand>
     <select />
   </component>
   <component name="DjangoConsoleOptions" custom-start-script="import sys; print('Python %s on %s' % (sys.version, sys.platform))&#10;import django; print('Django %s' % django.get_version())&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;if 'setup' in dir(django): django.setup()&#10;import django_manage_shell; django_manage_shell.run(PROJECT_ROOT)">
@@ -79,6 +78,8 @@
   </component>
   <component name="ProjectId" id="1dAc3WnJ1N3SJOBagBcj8zk2hng" />
   <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/manage.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -149,6 +150,21 @@
       <method v="2" />
     </configuration>
   </component>
+  <component name="ServiceViewManager">
+    <option name="allServicesViewState">
+      <serviceView>
+        <treeState>
+          <expand>
+            <path>
+              <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@3bbde7ea" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+            </path>
+          </expand>
+          <select />
+        </treeState>
+      </serviceView>
+    </option>
+  </component>
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -172,7 +188,7 @@
       <workItem from="1594006755546" duration="226000" />
       <workItem from="1595778081982" duration="1486000" />
       <workItem from="1595845724257" duration="1381000" />
-      <workItem from="1596089560915" duration="1613000" />
+      <workItem from="1596089560915" duration="15149000" />
     </task>
     <task id="LOCAL-00001" summary="test">
       <created>1591871275785</created>
@@ -251,7 +267,14 @@
       <option name="project" value="LOCAL" />
       <updated>1596089770824</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="9900">
+      <created>1596094756850</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1596094756850</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

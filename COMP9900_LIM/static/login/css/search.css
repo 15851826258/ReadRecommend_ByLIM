@@ -22,3 +22,34 @@
 .panel {
     border: none;
 }
+.left-box {
+    margin-left: 5%;
+    width: 30%;
+    margin-right: 5%;
+    float: left;
+}
+
+.right-box {
+    float: right;
+    width: 50%;
+    margin-right: 5%;
+    padding-left: 50px;
+    border-left: solid 1px lightgrey;
+}
+
+.up-box {
+    overflow: hidden;
+}
+
+.right-box div {
+    margin-bottom: 20px;
+}
+
+.select-box {
+    margin-right: 20px;
+    display: inline;
+}
+
+.select-box select {
+    height: 25px;
+}

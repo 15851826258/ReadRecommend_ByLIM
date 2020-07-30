@@ -66,18 +66,10 @@
         {% for key,value in collection_data.items %}
             <div class="list-group-item clearfix">
                 <ul>
+                      <span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true" style="line-height: 1.5"></span>
                       <a href="/Codetail/?coid={{ value }}@{{ user }}" class="list-group-item-heading">{{ key }}</a>
                 </ul>
 
-{#            {% for i in value %}#}
-{#                <div class="list-group-item">#}
-{#                        <a>{{ i.BkTitle }}</a>#}
-{#                        <a>{{ i.BkAuthor }}</a>#}
-{#                        <a>{{ i.BkPublisher }}</a>#}
-{#                        <a href="/Bkdetail/?id={{ i.BkId }}" style="margin-right: 20px"><button>detail</button></a>#}
-{#                        <a href="/deleteBk/?id={{ i.BkId }}@{{ key }}"><button type="button" name="{{ i.BkId }}">delete</button></a>#}
-{#                </div>#}
-{#            {% endfor %}#}
             </div>
         {% endfor %}
 
@@ -85,28 +77,28 @@
         <table class="table table-hover">
             <thead>
                 <tr>
-                    <th>Added time</th>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Category</th>
-                    <th>Publisher</th>
-                    <th>Publication date</th>
-                    <th>Rating</th>
-                    <th>Detail</th>
+                    <th style="text-align:center">Added time</th>
+                    <th style="text-align:center">Title</th>
+                    <th style="text-align:center">Author</th>
+                    <th style="text-align:center">Category</th>
+                    <th style="text-align:center">Publisher</th>
+                    <th style="text-align:center">Publication date</th>
+                    <th style="text-align:center">Rating</th>
+                    <th style="text-align:center">Detail</th>
                 </tr>
             </thead>
             <tbody>
             {% for time,book in top_10.items %}
                 <tr>
-                    <td>{{ time }}</td>
-                    <td>{{ book.BkTitle }}</td>
-                    <td>{{ book.BkAuthor }}</td>
-                    <td>{{ book.Category }}</td>
-                    <td>{{ book.BkPublisher }}</td>
-                    <td>{{ book.BkPubDate }}</td>
-                    <td>{{ book.Rating }}</td>
-                    <td>
-                      <a href="/Bkdetail/?id={{ book.BkId }}" class="btn btn-success btn-sm" style="float:left;margin-right: 20px">detail</a>
+                    <td style="text-align:center">{{ time }}</td>
+                    <td style="text-align:center">{{ book.BkTitle }}</td>
+                    <td style="text-align:center">{{ book.BkAuthor }}</td>
+                    <td style="text-align:center">{{ book.Category }}</td>
+                    <td style="text-align:center">{{ book.BkPublisher }}</td>
+                    <td style="text-align:center">{{ book.BkPubDate }}</td>
+                    <td style="text-align:center">{{ book.Rating }}</td>
+                    <td style="text-align:center">
+                      <a href="/Bkdetail/?id={{ book.BkId }}" class="btn btn-success btn-sm">detail</a>
                     </td>
                 </tr>
             {% endfor %}

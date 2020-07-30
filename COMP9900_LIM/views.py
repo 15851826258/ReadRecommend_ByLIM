@@ -1056,7 +1056,7 @@ def filter(request):
                             count += 1
                             score_stars += j.rating_stars
                         if count:
-                            if score_stars / count <= int(rating_score):
+                            if score_stars / count >= int(rating_score):
                                 books_list.append(i)
                                 categories.append(i.Category)
                                 authors.append(i.BkAuthor)
