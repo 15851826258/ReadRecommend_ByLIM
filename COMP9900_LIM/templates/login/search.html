@@ -1,0 +1,290 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'login/css/search.css' %}">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li ><a href="/homepage/">ReadRecommend<span class="sr-only">(current)</span> </a></li>
+<!--            <li><a href="#">Sign up</a></li>-->
+          </ul>
+          {% if username %}
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/logout/">Sign out</a> </li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/profile/">{{ username }}</a> </li>
+              </ul>
+          {% else %}
+              <ul class="nav navbar-nav navbar-right">
+                <a href="/login/"><button type="submit" class="btn btn-default">login</button></a>
+              </ul>
+          {% endif %}
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+    <div class="container">
+        <div class="search-box">
+          <form method="get" action="/search/">
+              <div class="input-group">
+                  {% csrf_token %}
+                  <input type="text" class="form-control" name="search_content" placeholder="Bookname/Username/Authorname" required>
+                  <span class="input-group-btn" id="search-addon">
+                    <button class="btn btn-primary" type="submit">
+                      <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                  </span>
+              </div>
+          </form>
+        </div>
+    </div>
+    <div class="container">
+    {% if not recommendationmodeal %}
+        <div class="form-group">
+            <form method="post" action="/filter/">
+                {%  csrf_token %}
+                <input class="hidden" value="{{ search }}" name="search_content">
+                <div class="search-box">
+                    <select class="form-control" name = "Author_name">
+                    <option selected value="">Author_name</option>
+                      {% for Author in Authors %}
+                        <option value="{{ Author }}">{{ Author }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div class="search-box">
+                    <select class="form-control" name = "Category">
+                    <option selected value="">Category</option>
+                      {% for Category in Categories %}
+                        <option value="{{ Category }}">{{ Category }}</option>
+                      {% endfor %}
+                    </select>
+                </div>
+                <div>
+                    <select name = "Rating_score">
+                        <option selected value="">Rating</option>
+                        <option value="5">5</option>
+                        <option value="4">4</option>
+                        <option value="3">3</option>
+                        <option value="2">2</option>
+                        <option value="1">1</option>
+                    </select>
+                    <input type="submit" class="btn btn-primary" value = "Filter" >
+                </div>
+
+            </form>
+        </div>
+    {% endif %}
+      <table class="table table-hover">
+          <thead>
+            <tr>
+                <th>title</th>
+                <th>author</th>
+                <th>category</th>
+                <th>publisher</th>
+                <th>publication date</th>
+                <th>detail</th>
+                <th>operation</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for type,all in search_result_instance.items %}
+                  {% if type == 'Recommend' %}
+                      {% if all %}
+                      <tr>
+                          <td>Recommend</td>
+                      </tr>
+                      {% for book in all %}
+                      <tr>
+                          <td>{{ book.BkTitle }}</td>
+                          <td>{{ book.BkAuthor }}</td>
+                          <td>{{ book.Category }}</td>
+                          <td>{{ book.BkPublisher }}</td>
+                          <td>{{ book.BkPubDate }}</td>
+                          <td>
+                              <a href="/Bkdetail/?id={{ book.BkId }}" class="btn btn-success btn-sm" style="float:left;margin-right: 20px">detail</a>
+                          </td>
+                          <td>
+                              <div>
+                              {% if not nouser %}
+                                  <form class="form-add2co" action="/addBk2Co/" method="POST">
+                                      {%  csrf_token %}
+                                    <div>
+                                      <input class="hidden" value="{{ search_result_instance }}" name="search_result">
+                                      <select class="form-control" name = "id">
+{#                                          <option selected value="{{ book.BkId }}@{{ collection.CoId }}@{{ search }}">Default</option>#}
+                                          {% for collection in collections %}
+                                            <option value="{{ book.BkId }}@{{ collection.CoId }}@{{ search }}">{{ collection.CoName }}</option>
+                                          {% endfor %}
+                                      </select>
+                                      <div class="form-group">
+                                          <input type="number" name="days" class="form-control" id="id_days"
+                                            min="1" max="60" placeholder="reading days:" required>
+                                      </div>
+                                      <input type="submit" class="btn btn-primary" value = "Add" >
+                                    </div>
+                                  </form>
+                              {% endif %}
+                              </div>
+                          </td>
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+                  {% endif %}
+                  {% if type == 'Book' %}
+                      {% if all %}
+                      <tr>
+                          <td>Book</td>
+                      </tr>
+                      {% for book in all %}
+                      <tr>
+                          <td>{{ book.BkTitle }}</td>
+                          <td>{{ book.BkAuthor }}</td>
+                          <td>{{ book.Category }}</td>
+                          <td>{{ book.BkPublisher }}</td>
+                          <td>{{ book.BkPubDate }}</td>
+                          <td>
+                              <a href="/Bkdetail/?id={{ book.BkId }}" class="btn btn-success btn-sm" style="float:left;margin-right: 20px">detail</a>
+                          </td>
+                          <td>
+                              <div>
+                              {% if not nouser %}
+                                  <form class="form-add2co" action="/addBk2Co/" method="POST">
+                                      {%  csrf_token %}
+                                    <div>
+                                      <input class="hidden" value="{{ search_result_instance }}" name="search_result">
+                                      <select class="form-control" name = "id">
+{#                                          <option selected value="{{ book.BkId }}@{{ collection.CoId }}@{{ search }}">Default</option>#}
+                                          {% for collection in collections %}
+                                            <option value="{{ book.BkId }}@{{ collection.CoId }}@{{ search }}">{{ collection.CoName }}</option>
+                                          {% endfor %}
+
+                                      </select>
+                                      <div class="form-group">
+                                          <input type="number" name="days" class="form-control" id="id_days"
+                                            min="1" max="60" placeholder="reading days:" required>
+                                      </div>
+                                      <input type="submit" class="btn btn-primary" value = "Add" >
+                                    </div>
+                                  </form>
+                              {% endif %}
+                              </div>
+                          </td>
+                      </tr>
+                      {% endfor %}
+                      {% endif %}
+                  {% endif %}
+                  {% if type == 'Author' %}
+                      {% if all %}
+                      <tr><td>Author</td></tr>
+                      {% for book in all %}
+                          <tr>
+                              <td>{{ book.BkTitle }}</td>
+                              <td>{{ book.BkAuthor }}</td>
+                              <td>{{ book.Category }}</td>
+                              <td>{{ book.BkPublisher }}</td>
+                              <td>{{ book.BkPubDate }}</td>
+                              <td>
+                                  <a href="/Bkdetail/?id={{ book.BkId }}" class="btn btn-success btn-sm" style="float:left;margin-right: 20px">detail</a>
+                              </td>
+                              <td>
+                                  <div>
+                                  {% if not nouser %}
+                                      <form class="form-add2co" action="/addBk2Co/" method="POST">
+                                          {%  csrf_token %}
+                                      <div>
+                                          <input class="hidden" value="{{ search_result_instance }}" name="search_result">
+                                          <select class="form-control" name = "id">
+{#                                              <option selected value="{{ book.BkId }}@{{ collection.CoId }}@{{ search }}">Default</option>#}
+                                              {% for collection in collections %}
+                                                <option value="{{ book.BkId }}@{{ collection.CoId }}@{{ search }}">{{ collection.CoName }}</option>
+                                              {% endfor %}
+                                          </select>
+                                          <div class="form-group">
+                                              <input type="number" name="days" class="form-control" id="id_days"
+                                                min="1" max="60" placeholder="reading days:" required>
+                                          </div>
+                                          <input type="submit" class="btn btn-primary" value = "Add">
+                                      </div>
+                                      </form>
+                                  {% endif %}
+                                  </div>
+                              </td>
+                          </tr>
+                      {% endfor %}
+                  {% endif %}
+                  {% endif %}
+
+
+
+                  {% if type == 'User' %}
+                      {% if all %}
+                      <tr><td>User</td></tr>
+                      {% for user in all %}
+                          <div class="align-right">
+                              <a>User Name: </a>
+                              <a href="/Userdetail/?id={{ user.UserId }}">{{ user.UserName }}</a>
+                              <br>
+                          </div>
+                      {% endfor %}
+                      {% endif %}
+                  {% endif %}
+
+
+{#                  {% if type == 'Collection' %}#}
+{#                      <h4>Collection</h4>#}
+{#                      {% for ownername,collection in all.items %}#}
+{#                          <div class="align-right">#}
+{#                              <a>Collection Name: </a>#}
+{#                              <a href="/Codetail/?id={{ collection.CoId }}@{{ search }}">{{ collection.CoName }}</a>#}
+{#                              <br>#}
+{#                              <a>Collection Owner Name: </a>#}
+{#                              <a href="/Userdetail/?id={{ collection.CoOwner_id }}@{{ search }}">{{ ownername }}</a>#}
+{#                              <br>#}
+{#                              <a>Collection Create Time: </a>#}
+{#                              <a>{{ collection.CoCreateDate }}</a>#}
+{#                              <br>#}
+{#                              <a>Collection Update Time: </a>#}
+{#                              <a>{{ collection.CoUpdateDate }}</a>#}
+{#                              <br>#}
+{#                          </div>#}
+{#                      {% endfor %}#}
+{#                  {% endif %}#}
+
+
+
+              {% endfor %}
+          </tbody>
+      </table>
+    </div>
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</body>
+</html>

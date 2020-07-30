@@ -1,0 +1,56 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- 上述meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'login/css/login.css' %}" rel="stylesheet"/>
+    <title>Login Page</title>
+  </head>
+  <body>
+    <div class="container">
+            <div class="col">
+              <form class="form-login" action="/index/" method="post">
+                  {% csrf_token %}
+                  <h3 class="text-center">Welcome to ReadRecommend</h3>
+                  <div class="input-group mb-3">
+{#                    <label for="id_username">Username: </label>#}
+                      <div class="input-group-prepend">
+                          <span class="input-group-text bg-warning">🙎‍♂️</span>
+                      </div>
+                    <input type="text" name='username' class="form-control" id="id_username" placeholder="Username" autofocus required>
+                  </div>
+                  <div class="input-group mb-3">
+{#                    <label for="id_password">Password: </label>#}
+                      <div class="input-group-prepend">
+                          <span class="input-group-text bg-warning"style="height:46px;">🔑</span>
+                      </div>
+                    <input type="password" name='password' class="form-control" id="id_password" placeholder="Password" required>
+                  </div>
+                  <div>
+                    <a href="/regist/" class="text-success"><ins>Regist Now!</ins></a>
+                    <button type="submit" class="btn btn-primary float-right">Sign On</button>
+                  </div>
+              </form>
+            </div>
+    </div> <!-- /container -->
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    {#    以下三者的引用顺序是固定的#}
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  </body>
+</html>

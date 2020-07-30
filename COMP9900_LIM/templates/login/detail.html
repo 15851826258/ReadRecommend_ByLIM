@@ -1,0 +1,242 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'login/css/book.css' %}">
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{% static 'js/rating.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+      <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#"></a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li ><a href="/homepage/">ReadRecommend<span class="sr-only">(current)</span> </a></li>
+<!--            <li><a href="#">Sign up</a></li>-->
+          </ul>
+          {% if username %}
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/logout/">Sign out</a> </li>
+              </ul>
+              <ul class="nav navbar-nav navbar-right">
+                <li><a href="/profile/">{{ username }}</a> </li>
+              </ul>
+          {% else %}
+              <ul class="nav navbar-nav navbar-right">
+                <a href="/login/"><button type="submit" class="btn btn-default">login</button></a>
+              </ul>
+          {% endif %}
+        </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+
+
+
+
+    <div class="modal fade" id="collectBookModal" tabindex="-1" role="dialog"
+         aria-labelledby="collectBookModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="collectBookModalLabel">Collect a Book</h4>
+                </div>
+                <form action="/addBk/" method="post">
+                    <input type="hidden" name="book_id" value="{{ book.BkId }}@{{ collection_id }}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="id_collection">collection: </label>
+                            <select name='collection_id' class="form-control" id="id_collection"
+                                    required>
+                                {% for collection in collections %}
+                                    <option value="{{ collection.CoId }}">{{ collection.CoName }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="id_days">reading days: </label>
+                            <input type="number" name="days" class="form-control" id="id_days"
+                                   min="1" max="60" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addReviewModal" tabindex="-1" role="dialog"
+         aria-labelledby="addReviewModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="collectBookModalLabel">Add Review</h4>
+                </div>
+                <form action="/addReview/" method="post">
+                    <input type="hidden" name="book_id" value="{{ book.BkId }}@{{ collection_id }}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="id_review">review: </label>
+                            <textarea name='content' class="form-control" id="id_review"
+                                      required style="height: 100px"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="left-box">
+        <h2>{{ book.BkTitle }}</h2>
+        <div class="base-info-box">
+            <div class="img-box">
+                <img src="../../static/imgs/bookcover/{{ book.BkTitle }}.JPG" alt="">
+            </div>
+            <div class="info-box pull-left">
+                <div class="record-{{ state }}">
+                    {% if state %}
+                        <p style="font-size: 12px; font-weight: normal">
+                            <span>Start date: </span><span style="margin-right: 10px">{{ add_date }}</span>
+                            /<span style="margin-left: 10px">End date: </span><span>{{ end_date }}</span>
+                            <span style="font-weight: bolder">({{ state }})</span>
+                            {% if extend %}
+                                <form action="/extend/" method="post">
+                                {% csrf_token %}
+                                    <input type="hidden" name="book_id" value="{{ book.BkId }}@{{ collection_id }}">
+                                    <input type="number" name="days" class="form-control" id="id_days"
+                                   min="1" max="60" placeholder="{{ extend }}" required>
+                                </form>
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                </div>
+                <p><span>Author:</span><span>{{ book.BkAuthor }}</span></p>
+                <p><span>Publisher:</span><span>{{ book.BkPublisher }}</span></p>
+                <p><span>Publication Date:</span><span>{{ book.BkPubDate }}</span></p>
+                <p><span>Category:</span><span>{{ book.Category }}</span></p>
+            </div>
+        </div>
+        <div class="panel panel-info panel-review">
+            <div class="panel panel-heading" style="overflow: hidden">
+                    <span>Reviews</span>
+                    <button type="button" class="btn pull-right" data-toggle="modal" data-target="#addReviewModal">
+                        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                        Add review
+                    </button>
+            </div>
+            <div class="review-list-box panel panel-body">
+                {% for review in reviews %}
+                    <div class="review-box">
+                        <p class="review-info">
+                            <span style="margin-right: 20px">user:{{ review.Poster }}</span>
+                            <span>post time:{{ review.ReviewDate }}</span>
+                        </p>
+                        <p class="review-content">{{ review.ReviewCont }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="right-box">
+        <div class="rating-box">
+            <p style="font-size: 20px">ratings:</p>
+            <p style="font-size: 30px;font-weight: bold;
+            float: left;margin-right: 30px">{{ numofRating }}</p>
+            <p class="rating-star-list">
+                {% for light in light_stars %}
+                    <img src="{% static 'imgs/rate_light.png' %}" alt="">
+                {% endfor %}
+                {% for half in  half_stars %}
+                    <img src="{% static 'imgs/rate_half.jpg' %}" alt="">
+                {% endfor %}
+                {% for gray in gray_stars %}
+                    <img src="{% static 'imgs/rate_gray.png' %}" alt="">
+                {% endfor %}
+            </p>
+            <p style="font-style: italic; font-size: 16px">from <span style="font-weight: bolder">
+                {{ count }}</span>  readers
+            </p>
+            <div style="margin-top: 20px">
+                <p style="margin-right: 30px; float:left;font-size: 20px;">Rate:</p>
+                {% for gray in ""|ljust:rating_stars_light %}
+                    <img src="{% static 'imgs/rate_light.png' %}" alt="" class="rating-star">
+                {% endfor %}
+                {% for gray in ""|ljust:rating_stars_gray %}
+                    <img src="{% static 'imgs/rate_gray.png' %}" alt="" class="rating-star">
+                {% endfor %}
+                <form action="/addRating/" method="post" id="rating_form">
+                    {% csrf_token %}
+                    <input type="hidden" name="rating_stars">
+                    <input type="hidden" name="book_id" value="{{ book.BkId }}@{{ collection_id }}">
+                </form>
+            </div>
+            <p style="margin-top: 30px; font-size: 16px; font-style: italic"
+               data-toggle="tooltip" data-placement="right" title="Based on collection numbers">
+                Popularity Index: <span style="font-weight: bold">{{ book.Popularity }}</span>
+            </p>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#collectBookModal"
+            style="margin-top: 20px">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                Add to collection
+            </button>
+        </div>
+
+        <div class="panel panel-success panel-recommend">
+            <div class="panel panel-heading">
+                Recommend System
+            </div>
+            <div class="panel panel-body">
+                <form action="/recommendModel/" method="get">
+                    <input type="hidden" name="book_id" value="{{ book.BkId }}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_mode">recommend mode: </label>
+                        <select name='mode' class="form-control" id="id_mode"
+                                required>
+                            <option value="1">1-based on author</option>
+                            <option value="2">2-based on category</option>
+                            <option value="3">3-based on rating</option>
+                            <option value="4">4-based on popularity</option>
+                        </select>
+                    </div>
+                    <input type="submit" value="submit" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+</body>
+</html>

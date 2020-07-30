@@ -1,0 +1,83 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- 上述meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'login/css/login.css' %}" rel="stylesheet"/>
+    <title>Register</title>
+      <script type="text/javascript" src="{% static 'js/jquery-3.5.1.js' %}" ></script>
+    <script>
+        function validate() {
+            var pwd = $("#id_password").val();
+            var pwd1 = $("#pwd1").val();
+            //对比两次输入的密码
+            if(pwd == pwd1 )
+            {
+                $("#tips").html("Password confirmed, Submit now~");
+                $("#tips").css("color", "green");
+                $("#rewrite").removeAttr("disabled");
+            } else {
+                $("#tips").html("Two passwords different, please comfirmed!");
+                $("#tips").css("color", "red");
+                {#$("button").attr("disabled", "disabled");#}
+            }
+        }
+    </script>
+
+  </head>
+  <body>
+    <div class="container">
+            <div class="col">
+              <form class="form-login" action="/regist/" method="post">
+                  {% csrf_token %}
+                  <h3 class="text-center">Welcome to Register Page</h3>
+{#                  <div class="form-group">#}
+                  <div class="input-group mb-3">
+{#                    <label for="id_username">username:</label>#}
+                      <div class="input-group-prepend">
+								<span class="input-group-text bg-warning">🙎‍♂️</span>
+                      </div>
+                    <input type="text" name='username' class="form-control" id="id_username" placeholder="Username" autofocus required>
+                  </div>
+                  <div class="input-group mb-3">
+{#                    <label for="id_password">password:</label>#}
+                      <div class="input-group-prepend">
+								<span class="input-group-text bg-warning" style="height:46px;">🔑</span>
+                      </div>
+                    <input type="password" name='password' class="form-control" id="id_password" placeholder="Password" required>
+                  </div>
+                  <div class="input-group mb-3">
+                      <div class="input-group-prepend">
+                          <span class="input-group-text bg-warning" style="height:46px;">🔑</span>
+                      </div>
+                      <input type="password" class="form-control" placeholder="Password confirm" id="pwd1" name="pwd" required onblur="validate()">
+                      <span id="tips"></span>
+                  </div>
+                  <div>
+                      <a href="/index/" class="text-success"><ins>Login Now!</ins></a>
+                  <button type="submit" class="btn btn-primary float-right">Submit</button>
+                  </div>
+              </form>
+            </div>
+    </div> <!-- /container -->
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                alert('{{ msg }}');
+            {% endfor %}
+        </script>
+    {% endif %}
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    {#    以下三者的引用顺序是固定的#}
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.15.0/umd/popper.js"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+  </body>
+</html>
