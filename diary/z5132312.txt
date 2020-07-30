@@ -12,3 +12,15 @@ I used to decided database：mongodb + mongoengine ORM to build the modle, back 
 
 Week 5
 I learnd something for the new tools with the help from my team numbers, but it is diffcult for me to change and make my team numbers codes better, so I did a vision by my self based on some basic code from my teammates. Next week, I will do more functions.
+
+Week 6
+Flexible week, after a discussion with my team numbers, we finally decided to use my code logic and model for the functions of demo A. I finished it. Next week I will do more functions.
+
+Week 7
+I did the function code for demo B. My team numbers made it looks better. Meeting with group member discussed the retrospective A. Next week I make the code better.
+
+Week 8
+Making the code for demo B better. Next week I will make front-end looks better.
+
+Week 9
+Learning front-end, making the code better. Discussing with my team numbers about the final report and final presentation.
