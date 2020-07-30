@@ -28,4 +28,8 @@ Meeting with group member discussed the retrospective A. Did some interactive va
 
 Week8
 
-Prepared Demo B.
+Prepared Demo B. Start writing the functionality parts for report.  Finished retrospective B report.
+
+Week8
+
+Did unit tests for our completed projects. Checks all objectives we did.
