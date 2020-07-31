@@ -143,6 +143,9 @@
                                   <form class="form-inline" action="/addBk2Co/" method="POST" style="width: 260px">
                                       {%  csrf_token %}
                                     <div class="select-box">
+                                      {% if model %}
+                                        <input class="hidden" value="{{ model }}" name = "model">
+                                      {% endif %}
                                       <input class="hidden" value="{{ search_result_instance }}" name="search_result">
                                       <select class="form-control" name = "id">
 {#                                          <option selected value="{{ book.BkId }}@{{ collection.CoId }}@{{ search }}">Default</option>#}

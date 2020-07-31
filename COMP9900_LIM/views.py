@@ -469,11 +469,12 @@ def addBk2Co(request):
                 messages.error(request, 'Duplicated Book add')
                 # if search page is the result of recommendation, then remove the filter input boxes
                 if search_result_instance['Recommend'] and not search_result_instance['Book']:
+                    model = request.POST.get("model", "")
                     return render(request, "login/search.html",
                                   {"username": username, "search_result_instance": search_result_instance,
                                    "collections": Collections_instance,
                                    'Authors': sorted(set(authors)), 'Categories': sorted(set(categories)),
-                                   "recommendationmodeal": 1})
+                                   "recommendationmodeal": 1, "model": model})
                 else:
                     return render(request, "login/search.html",
                                           {"username": username, "search_result_instance": search_result_instance,
