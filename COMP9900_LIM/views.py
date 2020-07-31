@@ -467,7 +467,15 @@ def addBk2Co(request):
                 book_id_list.append(book.BkId_id)
             if int(book_id) in book_id_list:
                 messages.error(request, 'Duplicated Book add')
-                return render(request, "login/search.html",
+                # if search page is the result of recommendation, then remove the filter input boxes
+                if search_result_instance['Recommend'] and not search_result_instance['Book']:
+                    return render(request, "login/search.html",
+                                  {"username": username, "search_result_instance": search_result_instance,
+                                   "collections": Collections_instance,
+                                   'Authors': sorted(set(authors)), 'Categories': sorted(set(categories)),
+                                   "recommendationmodeal": 1})
+                else:
+                    return render(request, "login/search.html",
                                           {"username": username, "search_result_instance": search_result_instance,
                                            "collections": Collections_instance,
                                            'Authors': sorted(set(authors)), 'Categories': sorted(set(categories))})
@@ -886,9 +894,9 @@ def recommendModel(request):
                     break
         # get authors and categories of all searched book for filter function
         search_result_instance['Recommend'] = list(books)
-        search_result_instance['User'] = []
-        search_result_instance['Author'] = []
         search_result_instance['Book'] = []
+        search_result_instance['Author'] = []
+        search_result_instance['User'] = []
         for i in books:
             if i.Category not in categories:
                 categories.append(i.Category)
