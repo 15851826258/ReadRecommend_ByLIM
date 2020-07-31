@@ -11,10 +11,9 @@ from . import models
 import datetime
 
 
-# functions to check the input and interact with database
 def index(request):
     if request.method == 'POST':
-        # get the info from POST request
+        # get the information from POST request
         username = request.POST.get("username")
         password = request.POST.get("password")
         # try method. in case there is no such a user
@@ -32,7 +31,7 @@ def index(request):
                 messages.error(request, 'Wrong password!Please try again.')
                 return render(request, 'login/index.html')
         except models.User.DoesNotExist:
-            messages.error(request, "Username doesn't exist.")
+            messages.error(request, "Username not exist")
             return render(request, 'login/index.html')
     return render(request, 'login/index.html')
 
@@ -42,7 +41,7 @@ def regist(request):
         # get the input from website request
         username = request.POST.get('username')
         password = request.POST.get('password')
-        # input check start #TODO 判空
+        # input check start #
         try:  # check if the user exist
             user_check = models.User.objects.get(UserName=username)  # get the user instance  # user exists
             print("Username has been used")
@@ -68,8 +67,8 @@ def regist(request):
 
 
 def profileview(request):
-    # get the user name in the session
     if request.method == 'GET':
+        # get the user name in the session
         username = request.session["username"]
         # get the user information
         user_instance = models.User.objects.get(UserName=username)
@@ -83,6 +82,7 @@ def profileview(request):
                 allbook[j.CreateTime] = j
             collection_data[i.CoName] = i.CoId
         # sort by the books's added time
+        # get the top 10 added books
         a = sorted(allbook.keys(), reverse=True)
         top_name = {}
         top_id = []
@@ -98,17 +98,15 @@ def profileview(request):
             if len(top_id) == 10:
                 break
         # get the goal of this month
-        month = str(datetime.datetime.now()).split("-")[1]
         year = str(datetime.datetime.now()).split("-")[0]
+        month = str(datetime.datetime.now()).split("-")[1]
         date = year + '-' + month
         goals = models.Goals.objects.filter(user_id=user_instance.UserId).filter(create_time=date)
         if goals.exists():
             goal = goals[0].goal
         else:
             goal = 0
-        # according to the first rating time we can get when this book was read by the user
-        # and even after we have finished reading this book, we want to re-rate this book, the first rating date will
-        # record when we finished reading
+        # we considered that if user rate this book, which means user has finished reading this book
         num_rating = models.Rating.objects.filter(user_id=user_instance.UserId).filter(
             first_rate=date)
         num = 0
@@ -126,7 +124,7 @@ def profileview(request):
 def createCollection(request):
     username = request.session["username"]  # get username from session
     if request.method == "POST":
-        collection_name = request.POST.get("Coname")# get the
+        collection_name = request.POST.get("Coname")  # get the collection named by user
         User_instance = models.User.objects.get(UserName=username)  # get user information
         # start --duplication check
         Collections_instance = models.Collection.objects.filter(CoOwner_id=User_instance.UserId)
@@ -154,27 +152,29 @@ def createCollection(request):
 
 def deleteCollection(request):
     username = request.session["username"]  # get username from session
-    user_instance = models.User.objects.get(UserName=username)  # create user information
+    user_instance = models.User.objects.get(UserName=username)  # get user information
     if request.method == 'GET':
-        coname = request.GET["id"]
+        coname = request.GET["id"]  # get the id of the collection which user wants to delete
+        # check the default collection
         if coname != 'Default':
             # delete collection by name
             userid = user_instance.UserId
             Collection_instance = models.Collection.objects.get(CoName=coname, CoOwner=userid)
-            # remove the books information which is added to this collection
+            # remove the books addition information in this collection
             models.CoBk.objects.filter(CoId_id=Collection_instance.CoId).delete()
             Collection_instance.delete()
-            messages.error(request, "Successfully Delete")
+            messages.success(request, "Successfully Delete")
             # reload the profile page
             return HttpResponseRedirect('profile/')
         else:
             # reload the profile page
-            messages.error(request, "Can not delete Default collection")
+            messages.error(request, "Cannot delete Default collection")
             return HttpResponseRedirect('profile/')
 
 
 def logout(request):
     if request.method == 'GET':
+        # remove the session
         del request.session['username']
         # after logout, show top 10 books with high popularity and high rating
         books = models.Book.objects.order_by('-Popularity', '-Rating').all()
@@ -197,8 +197,9 @@ def logout(request):
 
 
 def deleteBk(request):
-    username = request.session["username"] # get the username from session
+    username = request.session["username"]  # get the username from session
     if request.method == 'POST':
+        # get the book id and collection id
         record = request.GET["id"]
         book_id = record.split("@")[0]
         collection_id = record.split("@")[1]
@@ -208,64 +209,49 @@ def deleteBk(request):
         # get the updated books list
         books_list = models.CoBk.objects.filter(CoId_id=collection_id)
         for i in books_list:
+            # get the book information
             all.append(models.Book.objects.get(BkId=i.BkId.BkId))
         return render(request, "login/codetail.html", {'username':username, "all": all, 'collection_id': collection_id})
 
 
 def homepage(request):
-    if request.session.get("username", ""): # get the login status
-        username = request.session["username"]# get the username form session
-        user_instance = models.User.objects.get(UserName=username)# get user information
+    if request.session.get("username", ""):  # get the login status
+        username = request.session["username"]  # get the username form session
+        user_instance = models.User.objects.get(UserName=username)  # get user information
         # get all collections
         Collections_instance = models.Collection.objects.filter(CoOwner_id=user_instance.UserId)
-        mode = int(user_instance.Recommend_model) # get the recommendation model user selected last time
+        mode = int(user_instance.Recommend_model)  # get the recommendation model user selected last time
         books = []
         authors = []
         categories = []
         search_result_instance = {}
-        # according to the last book this user added to his collection and the last recommendation model he
-        # chose  to recommend the same kind of the last added book to user based on the last selected
-        # recommendation model
+        # according to the last book user added to his collection and based on the last recommendation model he
+        # chose to recommend the books with the same kind of the last added book to user
         if user_instance.Last_add != 0 and mode != 0:
             # get the book user added to his collection last time
             book = models.Book.objects.filter(BkId=user_instance.Last_add)
             book = book[0]
             if mode == 1:  # based on author
-                books = models.Book.objects.filter(BkAuthor__iexact=book.BkAuthor).order_by('-Popularity',
-                                                                                            '-Rating')
+                # get the books have the same author with the book user added
+                books = models.Book.objects.filter(BkAuthor=book.BkAuthor).order_by('-Popularity', '-Rating')
                 # we only select the top 10 books from our search results and sorted by popularity and rating
                 if len(books) >= 10:
                     books = books[:10]
                 search_result_instance['Recommend'] = list(books)
-                # get the list of authors and categories of our results in order to filter function
-                for i in books:
-                    if i.Category not in categories:
-                        categories.append(i.Category)
-                    if i.BkAuthor not in authors:
-                        authors.append(i.BkAuthor)
             if mode == 2:  # based on category
+                # get the book have the same category with the book user added
                 books = models.Book.objects.filter(Category=book.Category).order_by('-Popularity', '-Rating')
                 if len(books) >= 10:
                     books = books[:10]
                 search_result_instance['Recommend'] = list(books)
-                for i in books:
-                    if i.Category not in categories:
-                        categories.append(i.Category)
-                    if i.BkAuthor not in authors:
-                        authors.append(i.BkAuthor)
             if mode == 3:  # based on rating
-                for i in models.Book.objects.order_by('-Popularity', '-Rating').all():
+                for i in models.Book.objects.order_by('-Rating', '-Popularity').all():
                     # we only selected the books have the similar rating with the selected book
                     if abs(book.Rating - i.Rating) <= 0.5:
                         books.append(i)
                     if len(books) >= 10:
                         break
                 search_result_instance['Recommend'] = books
-                for i in books:
-                    if i.Category not in categories:
-                        categories.append(i.Category)
-                    if i.BkAuthor not in authors:
-                        authors.append(i.BkAuthor)
             if mode == 4:  # based on popularity
                 for i in models.Book.objects.order_by('-Popularity', '-Rating').all():
                     # we only selected the books have the similar popularity with the selected book
@@ -274,16 +260,18 @@ def homepage(request):
                     if len(books) >= 10:
                         break
                 search_result_instance['Recommend'] = books
+        # get the list of authors and categories of our results in order to filter function
+        for i in books:
+            categories.append(i.Category)
+            authors.append(i.BkAuthor)
         # and we also list 10 books with high rating and popularity
         books2 = models.Book.objects.order_by('-Popularity', '-Rating').all()
         if len(books2) >= 10:
             books2 = books2[:10]
         search_result_instance['Book'] = list(books2)
         for i in books2:
-            if i.Category not in categories:
-                categories.append(i.Category)
-            if i.BkAuthor not in authors:
-                authors.append(i.BkAuthor)
+            categories.append(i.Category)
+            authors.append(i.BkAuthor)
         search_result_instance['Author'] = []
         search_result_instance['User'] = []
         return render(request, 'login/search.html', {'username': username,
@@ -300,18 +288,17 @@ def homepage(request):
         if len(books) >= 10:
             books = books[:10]
         search_result_instance['Book'] = list(books)
+        search_result_instance['Author'] = []
+        search_result_instance['User'] = []
         for i in books:
-            if i.Category not in categories:
-                categories.append(i.Category)
-            if i.BkAuthor not in authors:
-                authors.append(i.BkAuthor)
+            categories.append(i.Category)
+            authors.append(i.BkAuthor)
         return render(request, "login/search.html", {'search_result_instance': search_result_instance,
                                                      'Authors': sorted(set(authors)),
                                                      'Categories': sorted(set(categories)),'nouser': 1})
 
 
 def search(request):
-    # get the login status
     search_cont = request.GET.get('search_content')  # get the search content
     search_result_instance = {}
     authors = []
@@ -319,16 +306,16 @@ def search(request):
     book_list = []
     author_list = []
     user_list = []
+    # check the login status
     if request.session.get("username", ""):
         username = request.session["username"]  # get username from session
-        # create a list of collection for addBook2Co function
-        # start receiving data from web page requests
-        User_instance = models.User.objects.get(UserName=username)
+        # create a list to store collections information for addBook2Co drop-down box
+        # receive data from web page requests
+        User_instance = models.User.objects.get(UserName=username)  # get user information
         Collections_instance = models.Collection.objects.filter(CoOwner_id=User_instance.UserId)
-
         #  search for books with the search content in its title
         search_result_instance1 = models.Book.objects.filter(BkTitle__icontains=search_cont).order_by(
-            '-Popularity', '-Rating')  # search to backend
+            '-Popularity', '-Rating')
         if search_result_instance1.exists():
             for i in search_result_instance1:
                 book_list.append(i)
@@ -406,17 +393,18 @@ def addBk2Co(request):
     # get the login status
     if request.session.get("username", ""):
         username = request.session["username"]  # get username from session
-        User_instance = models.User.objects.get(UserName=username) # get user information
+        User_instance = models.User.objects.get(UserName=username)  # get user information
         # get collections information
         Collections_instance = models.Collection.objects.filter(CoOwner_id=User_instance.UserId)
         # start receiving data from web page requests
         authors = []
         categories = []
         if request.method == "POST":
-            # get the parameters from url
+            # get the parameters from front side
             record = request.POST.get("id", "")
             book_id = record.split("@")[0]
             co_id = record.split("@")[1]
+            # get the search result of current page and after addBk2Co function, reload the same page
             search_result = request.POST["search_result"]
             print(search_result)
             search_result_instance = {}
@@ -424,16 +412,17 @@ def addBk2Co(request):
             authors_list = []
             books_list = []
             recommend_list = []
-            # cut the original page search result string to render the page after addBk2Co function
-            # get the user result from string and assign the user query result to search_result_instance
-            if len(search_result[1:-1].split("'User': ")[1]) > 2:
+            # process the search result string
+            # process the User part of the search result and assign the query result to search_result_instance
+            # get the user id from search result string
+            if len(search_result[1:-1].split("'User': ")[1]) > 2:  # if user search result exists
                 users_result = search_result[1:-1].split("'User': ")[1][1:-1].replace(" ", "").split(",")
                 for i in users_result:
                     users_list.append(models.User.objects.get(UserId=int(i.replace(
                         "<User:Userobject(", "").replace(")>", ""))))
             search_result = search_result[1:-1].split("'User': ")[0]
-            # get the author result from string and assign the author query result to search_result_instance
-            if len(search_result[:-2].split("'Author': ")[1]) > 2:
+            # get the book id from author search result and assign the author query result to search_result_instance
+            if len(search_result[:-2].split("'Author': ")[1]) > 2:  # if author search result exists
                 authors_result = search_result[:-2].split("'Author': ")[1][1:-1].replace(" ", "").split(",")
                 for i in authors_result:
                     book = models.Book.objects.get(BkId=int(i.replace(
@@ -444,8 +433,8 @@ def addBk2Co(request):
                     if book.Category not in categories:
                         categories.append(book.Category)
             search_result = search_result.split("'Author': ")[0]
-            # get the book result from string and assign the book query result to search_result_instance
-            if len(search_result[:-2].split("'Book': ")[1]) > 2:
+            # get the book id from book search result and assign the book query result to search_result_instance
+            if len(search_result[:-2].split("'Book': ")[1]) > 2:  # if book search result exists
                 books_result = search_result[:-2].split("'Book': ")[1][1:-1].replace(" ", "").split(",")
                 for i in books_result:
                     book = models.Book.objects.get(BkId=int(i.replace(
@@ -456,9 +445,8 @@ def addBk2Co(request):
                     if book.Category not in categories:
                         categories.append(book.Category)
             search_result = search_result.split("'Book': ")[0]
-            print(search_result)
-            # get the recommend result from string and assign the recommend query result to search_result_instance
-            if len(search_result) > 17:
+            # get the book id from recommend search result and assign the recommend query result to search_result_instance
+            if len(search_result) > 17:   # if recommend search result exists
                 recommend_result = search_result[:-2].split("'Recommend': ")[1][1:-1].replace(" ", "").split(",")
                 for i in recommend_result:
                     book = models.Book.objects.get(BkId=int(i.replace(
@@ -507,14 +495,14 @@ def addBk2Co(request):
 
 
 def Bkdetail(request):
-    if request.session.get("username", ""): # check the status of login
-        username = request.session["username"] # get the username from session
-        user_instance = models.User.objects.get(UserName=username) # get the user information
-        record = request.GET["id"] # get the book_id
+    if request.session.get("username", ""):  # check the status of login
+        username = request.session["username"]  # get the username from session
+        user_instance = models.User.objects.get(UserName=username)  # get the user information
+        record = request.GET["id"]  # get the book_id
         book_id = record.split('@')[0]
         status = ''
         extend_days = ''
-        # if user click the detail button from their owner collection, because we may add one book to different
+        # if user check the book detail from their owner collection, because we may add one book to different
         # collections, so only click the detail button from the collection page, we can get this book's accurate
         # information like the date when this book was added to this book
         if len(record.split('@')) == 2:
@@ -527,7 +515,7 @@ def Bkdetail(request):
                 read_date = int(data[0].read_dates)
                 # calculate the end reading date by datetime class
                 end_date = data[0].CreateTime + datetime.timedelta(days=read_date)
-                # calculate the time interval between the current time and when the user added ths book to his collection
+                # calculate time interval between the current time and when the user added ths book to his collection
                 num_days = (datetime.datetime.now() - data[0].CreateTime).days
                 # if we rated this book, which means we have read this book
                 if models.Rating.objects.filter(user_id=user_instance.UserId).filter(book_id=book_id).exists():
@@ -538,7 +526,7 @@ def Bkdetail(request):
                         status = 'reading'
                     else:
                         status = 'not_read'
-                        extend_days = 15
+                        extend_days = 7
         # get the book's information
         search_result = models.Book.objects.get(BkId=book_id)
         # get the user's collections information
@@ -560,7 +548,7 @@ def Bkdetail(request):
             light_score_stars = 0
         num += light_score_stars
         light_stars = list(range(light_score_stars))
-        # calculate the half shining star
+        # check the half shining star
         if count != 0:
             if score_stars / count - light_score_stars >= 0.5:
                 num += 0.5
@@ -570,7 +558,7 @@ def Bkdetail(request):
                 half_stars = list(range(0))
                 gray_stars = list(range(5 - light_score_stars))
         else:
-            gray_stars = list(range(0))
+            gray_stars = list(range(5))
             half_stars = list(range(0))
         # get the current user's rating information
         rating = models.Rating.objects.filter(user_id=user_instance.UserId).filter(book_id=book_id).all()
@@ -580,14 +568,14 @@ def Bkdetail(request):
             rating_stars = 0
         rating_stars_light = int(rating_stars)
         rating_stars_gray = 5 - int(rating_stars)
-        # we didn't get the date when this book were added to the user collection
+        # if user didn't check the book detail information at their own collection page
         if not status:
             return render(request, "login/detail.html",
                       {"username": username, "book": search_result, "count": count, "numofRating": num,
                        "collections": collection_list, "reviews": Reviews, 'light_stars': light_stars,
                        'gray_stars': gray_stars, 'half_stars': half_stars, 'rating_stars_gray': rating_stars_gray,
                        'rating_stars_light': rating_stars_light})
-        # we have get the date when this book were added to the user collection and status is finished and reading
+        # if user check the book detail information at their own collection page and we will show its status
         elif status == 'finished' or status == 'reading':
             return render(request, "login/detail.html",
                           {"username": username, "book": search_result, "count": count, "numofRating": num,
@@ -595,7 +583,7 @@ def Bkdetail(request):
                            'gray_stars': gray_stars, 'half_stars': half_stars, 'rating_stars_gray': rating_stars_gray,
                            'rating_stars_light': rating_stars_light, 'state': status, 'add_date': add_date,
                            "end_date": end_date, 'collection_id': collection_id})
-        # if status is not read, we need provide a input box to extend the end reading date
+        # if status is not_read, we need provide a input box to extend the end reading date
         else:
             return render(request, "login/detail.html",
                           {"username": username, "book": search_result, "count": count, "numofRating": num,
@@ -606,11 +594,11 @@ def Bkdetail(request):
     else:
         # if no user is logged in
         record = request.GET["id"]
-        book_id = record.split('@')[0]
-        search_result = models.Book.objects.get(BkId=book_id) # get the book information
-        #get the book reviews and sorted by review_date
+        book_id = record.split('@')[0]  # get the book id
+        search_result = models.Book.objects.get(BkId=book_id)  # get the book information
+        # get the book reviews and sorted by review_date
         Reviews = models.Review.objects.filter(BkId_id=book_id).order_by('-ReviewDate')
-        rating_list = models.Rating.objects.filter(book_id=book_id) # get all the rating records from all users
+        rating_list = models.Rating.objects.filter(book_id=book_id)  # get all the rating records from all users
         # calculate the total rating score
         score_stars = 0
         count = 0
@@ -624,7 +612,7 @@ def Bkdetail(request):
             light_score_stars = 0
         num += light_score_stars
         light_stars = list(range(light_score_stars))
-        # calculate the half star
+        # check the half star
         if count != 0:
             if score_stars / count - light_score_stars >= 0.5:
                 num += 0.5
@@ -636,7 +624,7 @@ def Bkdetail(request):
         else:
             gray_stars = list(range(0))
             half_stars = list(range(0))
-        # personal rating sore is set to 0
+        # set personal rating sore to 0
         rating_stars = 0
         rating_stars_light = int(rating_stars)
         rating_stars_gray = 5 - int(rating_stars)
@@ -647,32 +635,32 @@ def Bkdetail(request):
 
 
 def extend(request):
-    username = request.session["username"] # get the username from session
-    user_instance = models.User.objects.get(UserName=username) # get the user information
-    record = request.POST["book_id"] # get the book id
+    username = request.session["username"]  # get the username from session
+    user_instance = models.User.objects.get(UserName=username)  # get the user information
+    record = request.POST["book_id"]  # get the book id
     book_id = record.split('@')[0]
-    extend = request.POST['days']# get the suggested extend reading date
-    collection_id = record.split('@')[1] # get the collection id
+    extend = request.POST['days']  # get the extend reading date
+    collection_id = record.split('@')[1]  # get the collection id
     # get the reading date information of this book
     data = models.CoBk.objects.filter(BkId_id=book_id).filter(CoId_id=collection_id).all()
     book = data[0]
     # change the record of reading book
     book.read_dates = extend
     book.save()
-    #reload the book detail page
+    # reload the book detail page
     return HttpResponseRedirect(f'Bkdetail/?id={book_id}@{collection_id}')
 
 
 def addBk(request):
-    if request.session.get("username", ""):# check the login status
-        username = request.session["username"]# get the username from sessopm
-        user_instance = models.User.objects.get(UserName=username)# get the user information
-        book_id = request.POST['book_id'].split("@")[0]# get the book id
-        # get the collection which have this book
+    if request.session.get("username", ""):  # check the login status
+        username = request.session["username"]  # get the username from session
+        user_instance = models.User.objects.get(UserName=username)  # get the user information
+        book_id = request.POST['book_id'].split("@")[0]  # get the book id
+        # get the id of collection which contains this book, user may want to add this book from one collection
+        # to another collection
         collection_of_book = request.POST['book_id'].split("@")[1]
-        # get the collection which user wants to add this book to
-        collection_id = request.POST['collection_id']# get the collection id
-        # check if this book has been added to user's collection
+        collection_id = request.POST['collection_id']  # get the id of collection which user wants to add this book to
+        # check if this book has been added to this collection
         books_list = models.CoBk.objects.filter(CoId_id=collection_id)
         books = []
         for i in books_list:
@@ -697,7 +685,6 @@ def addBk(request):
             Popularity = Book.Popularity
             Book.Popularity = Popularity + 1
             Book.save()
-            # get the information of this book
             # reload the book detail page
             if collection_of_book:
                 messages.success(request, 'Successfully Add')
@@ -708,19 +695,11 @@ def addBk(request):
 
 
 def addReview(request):
-    if request.session.get("username", ""): # check the login status
-        username = request.session["username"] # get the username from session
-        # get the user information
-        user_instance = models.User.objects.get(UserName=username)
-        # get the book id
-        book_id = request.POST['book_id'].split("@")[0]
-        # get the collection id
-        collection_id = request.POST['book_id'].split("@")[1]
-        status = ''
-        # get the book information
-        book = models.Book.objects.get(BkId=book_id)
-        # get user's all collections' information
-        collection_list = models.Collection.objects.filter(CoOwner_id=user_instance.UserId)
+    if request.session.get("username", ""):  # check the login status
+        username = request.session["username"]  # get the username from session
+        user_instance = models.User.objects.get(UserName=username)  # get the user information
+        book_id = request.POST['book_id'].split("@")[0]  # get the book id
+        collection_id = request.POST['book_id'].split("@")[1]  # get the collection id
         # get the review content
         content = request.POST['content']
         # add review to the database
@@ -741,24 +720,19 @@ def addReview(request):
 
 
 def addRating(request):
-    if request.session.get('username', ''): # check the login status
-        username = request.session['username'] # get the username from session
-        user_instance = models.User.objects.get(UserName=username) # get the user information
-        rating_stars = request.POST['rating_stars'] # get the user rating
-        status = ''
-        book_id = request.POST['book_id'].split('@')[0] # get the book id
-        collection_id = request.POST['book_id'].split('@')[1] # get the collection id
-        book = models.Book.objects.get(BkId=book_id) # get the book information
-        # get user's all collections
-        collection_list = models.Collection.objects.filter(CoOwner_id=user_instance.UserId)
+    if request.session.get('username', ''):  # check the login status
+        username = request.session['username']  # get the username from session
+        user_instance = models.User.objects.get(UserName=username)  # get the user information
+        rating_stars = request.POST['rating_stars']  # get the user rating
+        book_id = request.POST['book_id'].split('@')[0]  # get the book id
+        collection_id = request.POST['book_id'].split('@')[1]  # get the collection id
         # get user rating record for this book
         rating = models.Rating.objects.filter(user_id=user_instance.UserId).filter(book_id=book_id).all()
-        print(rating)
-        if len(rating) == 1:
+        if len(rating) == 1:  # if user have rated this book before
             rating[0].rating_stars = rating_stars
             rating[0].save()
         else:
-            Rating = models.Rating()
+            Rating = models.Rating()  # change the record in database
             Rating.book_id = book_id
             Rating.rating_stars = rating_stars
             Rating.user_id = user_instance.UserId
@@ -777,42 +751,39 @@ def addRating(request):
 
 def Codetail(request):
     record = request.GET["coid"]
-    coid = record.split('@')[0] # get the collection id
-    user = record.split('@')[1]# get the user id
+    coid = record.split('@')[0]  # get the collection id
+    user = record.split('@')[1]  # get the user id
     all = []
     # get all books from that collection
     books_list = models.CoBk.objects.filter(CoId_id=coid)
-    # get collection name
+    # get collection information
     collection = models.Collection.objects.get(CoId=coid)
     for i in books_list:
         all.append(models.Book.objects.get(BkId=i.BkId.BkId))
-    if request.session.get("username", ""):
-        username = request.session["username"]
-        if user == username:
-            collection_id = coid
-            return render(request, 'login/codetail.html', {'username':username, 'collection_id': collection_id,
+    if request.session.get("username", ""):  # check the login status
+        username = request.session["username"]  # get the username from session
+        if user == username:  # if user check his own collection
+            return render(request, 'login/codetail.html', {'username': username, 'collection_id': coid,
                                                            'all': all, 'collection_name': collection.CoName})
         else:
-            return render(request, 'login/codetail.html', {'username':username, 'all': all,
+            return render(request, 'login/codetail.html', {'username': username, 'all': all,
                                                            'collection_name': collection.CoName})
     else:
         return render(request, 'login/codetail.html', {'all': all, 'collection_name': collection.CoName})
 
 
 def Userdetail(request):
-    if request.session.get("username", ""):# get the login status
-        username = request.session["username"] # get the username from sesssion
-        User_instance = models.User.objects.get(UserName=username) # get the user information
-        record = request.GET["id"] # get the searched user's id
-        collection_user = models.User.objects.get(UserId=record) # get searched user information
-        if collection_user.UserName != username:
-            # if searched user is not current user
-            # get searched user collection information
-            collection_instance = models.Collection.objects.filter(CoOwner_id=collection_user.UserId)
+    if request.session.get("username", ""):  # check the login status
+        username = request.session["username"]  # get the username from session
+        record = request.GET["id"]  # get the searched user's id
+        searched_user = models.User.objects.get(UserId=record)  # get searched user information
+        if searched_user.UserName != username:  # if searched user is not current user
+            # get searched user collections information
+            collection_instance = models.Collection.objects.filter(CoOwner_id=searched_user.UserId)
             allbook = {}
             collection_data = {}
             for i in collection_instance:
-                # get all books from searched user's collections
+                # check all books information and get top10 books from searched user's collections
                 books_id = models.CoBk.objects.filter(CoId_id=i.CoId)
                 for j in books_id:
                     allbook[j.CreateTime] = j
@@ -833,14 +804,14 @@ def Userdetail(request):
                 if len(top_id) == 10:
                     break
             return render(request, 'login/Userdetail.html', {'username': username, "collection_data": collection_data,
-                                                             'user': collection_user.UserName, 'top_10': top_name})
+                                                             'user': searched_user.UserName, 'top_10': top_name})
         else:
-            # if searched user is current user, then load the profile page
+            # if searched user is current login user, then load the profile page
             return HttpResponseRedirect('profile/')
     else:
         record = request.GET["id"]
         collection_user = models.User.objects.get(UserId=record)
-        # get all books from searched user's collections
+        # check all books information and get the top 10 added books from searched user's collections
         collection_instance = models.Collection.objects.filter(CoOwner_id=collection_user.UserId)
         allbook = {}
         collection_data = {}
@@ -871,33 +842,27 @@ def Userdetail(request):
 
 
 def recommendModel(request):
-    if request.session.get('username', ''): # get the status of login
-        username = request.session['username'] # get username from session
-        User_instance = models.User.objects.get(UserName=username) # get user information
+    if request.session.get('username', ''):  # get the status of login
+        username = request.session['username']  # get username from session
+        User_instance = models.User.objects.get(UserName=username)  # get user information
         # get user's all collections
         Collections_instance = models.Collection.objects.filter(CoOwner_id=User_instance.UserId)
-        mode = int(request.GET.get('mode')) # get the recommend mode
-        book_id = request.GET.get('book_id') # get the selected bookid
-        book = models.Book.objects.get(BkId=book_id) # get the information of selected book
+        mode = int(request.GET.get('mode'))  # get the recommend mode
+        book_id = request.GET.get('book_id')  # get the selected book id
+        book = models.Book.objects.get(BkId=book_id)  # get the information of selected book
         books = []
         authors = []
         categories = []
         search_result_instance = {}
-        if mode == 1: # based on author
-            # search the books have the similar author with the selected book and sorted by popularity and rating
-            books = models.Book.objects.filter(BkAuthor__iexact=book.BkAuthor).order_by('-Popularity', '-Rating')
+        if mode == 1:  # based on author
+            # search the books have the same author with the selected book and sorted by popularity and rating
+            books = models.Book.objects.filter(BkAuthor=book.BkAuthor).order_by('-Popularity', '-Rating')
             # pick the top 10
             if len(books) >= 10:
                 books = books[:10]
             search_result_instance['User'] = []
             search_result_instance['Author'] = list(books)
             search_result_instance['Book'] = []
-            # get authors and categories of all searched book for filter function
-            for i in books:
-                if i.Category not in categories:
-                    categories.append(i.Category)
-                if i.BkAuthor not in authors:
-                    authors.append(i.BkAuthor)
         if mode == 2: # based on category
             # search the books have tht same category with the selected book and sorted by popularity and rating
             books = models.Book.objects.filter(Category=book.Category).order_by('-Popularity', '-Rating')
@@ -906,12 +871,6 @@ def recommendModel(request):
             search_result_instance['User'] = []
             search_result_instance['Author'] = []
             search_result_instance['Book'] = list(books)
-            # get authors and categories of all searched book for filter function
-            for i in books:
-                if i.Category not in categories:
-                    categories.append(i.Category)
-                if i.BkAuthor not in authors:
-                    authors.append(i.BkAuthor)
         if mode == 3: # based on rating
             # search the books have tht similar rating with the selected book and sorted by popularity and rating
             for i in models.Book.objects.order_by('-Popularity', '-Rating').all():
@@ -922,12 +881,6 @@ def recommendModel(request):
             search_result_instance['User'] = []
             search_result_instance['Author'] = []
             search_result_instance['Book'] = books
-            # get authors and categories of all searched book for filter function
-            for i in books:
-                if i.Category not in categories:
-                    categories.append(i.Category)
-                if i.BkAuthor not in authors:
-                    authors.append(i.BkAuthor)
         if mode == 4: # based on popularity
             # search the books have tht similar popularity with the selected book and sorted by popularity and rating
             for i in models.Book.objects.order_by('-Popularity', '-Rating').all():
@@ -938,12 +891,12 @@ def recommendModel(request):
             search_result_instance['User'] = []
             search_result_instance['Author'] = []
             search_result_instance['Book'] = books
-            # get authors and categories of all searched book for filter function
-            for i in books:
-                if i.Category not in categories:
-                    categories.append(i.Category)
-                if i.BkAuthor not in authors:
-                    authors.append(i.BkAuthor)
+        # get authors and categories of all searched book for filter function
+        for i in books:
+            if i.Category not in categories:
+                categories.append(i.Category)
+            if i.BkAuthor not in authors:
+                authors.append(i.BkAuthor)
         User_instance.Recommend_model = mode
         User_instance.save()
         # if recommend mode, we will not show filter input boxes
@@ -959,12 +912,10 @@ def recommendModel(request):
 
 
 def filter(request):
-    # get the filter parameters
-    author = request.POST.get('Author_name') # the informatio of author
-    category = request.POST.get('Category') # the information of category
-    rating_score = request.POST.get('Rating_score') # the information of rating score
-    # get the search result and search content information
-    search = request.POST.get('search_content')
+    author = request.POST.get('Author_name')  # get the author filter information
+    category = request.POST.get('Category')  # get the category filter information
+    rating_score = request.POST.get('Rating_score')  # get the rating filter information
+    search = request.POST.get('search_content')  # get the search content information
     if not rating_score:
         rating_score = 0
     search_result_instance = {}
@@ -972,19 +923,17 @@ def filter(request):
     author_book = []
     authors = []
     categories = []
-    if request.session.get("username", ""):
+    if request.session.get("username", ""):  # check the login status
         username = request.session["username"]  # get username from session
-        User_instance = models.User.objects.get(UserName=username) # get the usesr information
-        # get this user's all collections information
+        User_instance = models.User.objects.get(UserName=username)  # get the user information
+        # get this user's collections information
         Collections_instance = models.Collection.objects.filter(CoOwner_id=User_instance.UserId)
-
         if author:
-            if category: # if we filter with both author and category information
-                # filter books searched by titile and sort the filter result by tht popularity and rating
+            if category:  # if we filter with both author and category information
+                # filter books searched by title and sort the filter result by tht popularity and rating
                 search_result_instance1 = models.Book.objects.filter(BkTitle__icontains=search).filter(
-                    BkAuthor=author).filter(Category=category).order_by('-Popularity', '-Rating')  # search to backend
-                # if filter result exists
-                if search_result_instance1.exists():
+                    BkAuthor=author).filter(Category=category).order_by('-Popularity', '-Rating')
+                if search_result_instance1.exists():  # if filter result exists
                     # check if its rating higher than our filter rating parameter
                     for i in search_result_instance1:
                         rating_list = models.Rating.objects.filter(book_id=i.BkId)
@@ -999,13 +948,13 @@ def filter(request):
                                 authors.append(i.BkAuthor)
                                 categories.append(i.Category)
                         else:
-                            # if user didn't set the rating filter parameter
-                            # we add the books without rating records into our result
+                            # if user didn't set the rating filter parameter we add the books without rating records
+                            # into our result
                             if rating_score == 0:
                                 books_list.append(i)
                                 authors.append(i.BkAuthor)
                                 categories.append(i.Category)
-                # filter books searched by authorename with author and category and sort filter result by popularity and rating
+                # filter books searched by authorename and sort filter result by popularity and rating
                 search_result_instance2 = models.Book.objects.filter(BkAuthor__icontains=search).filter(
                     BkAuthor=author).filter(Category=category).order_by('-Popularity', '-Rating')
                 # if result exists
@@ -1026,8 +975,8 @@ def filter(request):
                                     authors.append(i.BkAuthor)
                                     categories.append(i.Category)
                         else:
-                            # if user didn't set the rating filter parameter
-                            # we add the books without rating records into our result
+                            # if user didn't set the rating filter parameter we add the books without rating
+                            # records into our result
                             if rating_score == 0:
                                 if i not in books_list:
                                     author_book.append(i)
@@ -1041,12 +990,11 @@ def filter(request):
                                                              "collections": Collections_instance,
                                                              "search": search, 'Authors': sorted(set(authors)),
                                                              'Categories': sorted(set(categories))})
-            else: # filter with author
-                # filter  books searched by title with the author and sort filter result by popularity and rating
+            else:  # filter with author
+                # filter books searched by title with the author and sort filter result by popularity and rating
                 search_result_instance1 = models.Book.objects.filter(BkTitle__icontains=search).filter(
                     BkAuthor=author).order_by('-Popularity', '-Rating')
-                # if result exists
-                if search_result_instance1.exists():
+                if search_result_instance1.exists():  # if result exists
                     for i in search_result_instance1:
                         # check if its rating higher than our filter rating parameter
                         rating_list = models.Rating.objects.filter(book_id=i.BkId)
@@ -1099,7 +1047,7 @@ def filter(request):
                                                              'Categories': sorted(set(categories))})
         else:
             if category:
-                # filter books searched by title with category information and sort filter result by popularity and rating
+                # filter books searched by title with category and sort filter result by popularity and rating
                 search_result_instance1 = models.Book.objects.filter(BkTitle__icontains=search).filter(
                     Category=category).order_by('-Popularity', '-Rating')
                 if search_result_instance1.exists():
@@ -1156,7 +1104,7 @@ def filter(request):
             else:
                 # filter books searched by title with rating score and sort the filter result by popularity and rating
                 search_result_instance1 = models.Book.objects.filter(BkTitle__icontains=search).order_by(
-                    '-Popularity', '-Rating')
+                    '-Rating', '-Popularity')
                 if search_result_instance1.exists():
                     for i in search_result_instance1:
                         # check if its rating higher than our filter rating parameter
@@ -1176,7 +1124,7 @@ def filter(request):
                                 books_list.append(i)
                                 authors.append(i.BkAuthor)
                                 categories.append(i.Category)
-                # filter books searched by authorname with rating score and sort the filter result by popularity and rating
+                # filter books searched by authorname with rating and sort the filter result by popularity and rating
                 search_result_instance2 = models.Book.objects.filter(BkAuthor__icontains=search).order_by(
                     '-Popularity', '-Rating')
                 if search_result_instance2.exists():
@@ -1207,10 +1155,10 @@ def filter(request):
                               {"username": username, "search_result_instance": search_result_instance,
                                "collections": Collections_instance, "search": search, 'Authors': sorted(set(authors)),
                                'Categories': sorted(set(categories))})
-    else: # if not log in, repeat the steps above
+    else:  # if not log in, repeat the steps above
         if author:
             if category:
-                # filter books searched by title with author and category and sort the filter result by popularity and rating
+                # filter books searched by title and sort the filter result by popularity and rating
                 search_result_instance1 = models.Book.objects.filter(BkTitle__icontains=search).filter(
                     BkAuthor=author).filter(Category=category).order_by('-Popularity', '-Rating')
                 if search_result_instance1.exists():
@@ -1232,7 +1180,7 @@ def filter(request):
                                 books_list.append(i)
                                 authors.append(i.BkAuthor)
                                 categories.append(i.Category)
-                # filter books searched by author name with author and category and sort the filter result by popularity and rating
+                # filter books searched by author name and sort the filter result by popularity and rating
                 search_result_instance2 = models.Book.objects.filter(BkAuthor__icontains=search).filter(
                     BkAuthor=author).filter(Category=category).order_by('-Popularity', '-Rating')
                 if search_result_instance2.exists():
@@ -1366,7 +1314,7 @@ def filter(request):
                               {"search_result_instance": search_result_instance, "search": search,
                                'Authors': sorted(set(authors)), 'Categories': sorted(set(categories)), 'nouser': 1})
             else:
-                # filter books searched by title with rating score and category and sort the filter result by popularity and rating
+                # filter books searched by title with rating score and sort the filter result by popularity and rating
                 search_result_instance1 = models.Book.objects.filter(
                     BkTitle__icontains=search).order_by('-Popularity', '-Rating')
                 if search_result_instance1.exists():
@@ -1387,7 +1335,7 @@ def filter(request):
                                 books_list.append(i)
                                 authors.append(i.BkAuthor)
                                 categories.append(i.Category)
-                # filter books searched by author name with rating score and sort the filter result by popularity and rating
+                # filter books searched by authorname with rating and sort the filter result by popularity and rating
                 search_result_instance2 = models.Book.objects.filter(
                     BkAuthor__icontains=search).order_by('-Popularity', '-Rating')
                 if search_result_instance2.exists():
@@ -1419,12 +1367,10 @@ def filter(request):
 
 
 def goals(request):
-    username = request.session['username'] # get the username from session
-    user_instance = models.User.objects.get(UserName=username)# get the user information
-    # get the date
-    month = str(datetime.datetime.now()).split("-")[1]
-    year = str(datetime.datetime.now()).split("-")[0]
-    date = year + '-' + month
+    username = request.session['username']  # get the username from session
+    user_instance = models.User.objects.get(UserName=username)  # get the user information
+    # get the date with format "year-month"
+    date = str(datetime.datetime.now()).split('-')[0] + "-" + str(datetime.datetime.now()).split('-')[1]
     goal = models.Goals.objects.filter(user_id=user_instance.UserId).filter(create_time=date)
     # check if user set a goal before
     if goal:
@@ -1441,16 +1387,16 @@ def goals(request):
 
 
 def goal_detail(request):
-    username = request.session['username']# get username from session
-    user_instance = models.User.objects.get(UserName=username)# get user information
-    # get the current date
+    username = request.session['username']  # get the username from session
+    user_instance = models.User.objects.get(UserName=username)  # get user information
+    # get the current date with format "year-month"
     date = str(datetime.datetime.now()).split('-')[0] + "-" + str(datetime.datetime.now()).split('-')[1]
     # check this month how many books were read by checking the first rating date of the book
     num_rating = models.Rating.objects.filter(user_id=user_instance.UserId).filter(
         first_rate=date)
     books_finished = []
     for i in num_rating:
-        # get the list of books rated by this month
+        # get the list of books rated at this month
         books = models.CoBk.objects.filter(Userid_id=i.user_id).filter(BkId_id=i.book_id)
         # make sure user has added this book to his collection
         if books.exists():
@@ -1459,9 +1405,9 @@ def goal_detail(request):
 
 
 def goal_history(request):
-    username = request.session['username']# get username from session
-    user_instance = models.User.objects.get(UserName=username)# get the user information
-    goals = models.Goals.objects.filter(user_id=user_instance.UserId)# get user's goals of previous months
+    username = request.session['username']  # get username from session
+    user_instance = models.User.objects.get(UserName=username)  # get the user information
+    goals = models.Goals.objects.filter(user_id=user_instance.UserId)  # get user's historical goals
     history = {}
     for i in goals:
         num = 0
@@ -1469,7 +1415,6 @@ def goal_history(request):
         # by checking the first date we rate book to get how  many books we read at the previous months
         num_rating = models.Rating.objects.filter(user_id=user_instance.UserId).filter(first_rate=i.create_time)
         for j in num_rating:
-            # get the list of books rated by this month
             books = models.CoBk.objects.filter(Userid_id=j.user_id).filter(BkId_id=j.book_id)
             # make sure user has added this book to his collection
             if books.exists():

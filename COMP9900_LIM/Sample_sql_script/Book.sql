@@ -5,7 +5,7 @@ date 07/28/2020
 Execute in SQL console and make sure you have the database named django_mysql and a table called book.
 */
 
-INSERT INTO django_mysql.Book (BkId, BkTitle, BkAuthor, BkPublisher, BkPubDate, Category) VALUES (1, 'Pride and Prejudice', 'Jane Austen', 'United Kingdom', '1813.01', 'Novel');
+INSERT INTO django_mysql.Book (BkId, BkTitle, BkAuthor, BkPublisher, BkPubDate, Category, Popularity, Rating) VALUES (1, 'Pride and Prejudice', 'Jane Austen', 'United Kingdom', '1813.01', 'Novel');
 INSERT INTO django_mysql.Book (BkId, BkTitle, BkAuthor, BkPublisher, BkPubDate, Category) VALUES (2, 'Jane Eyre', 'Charlotte Brontë', 'England', '1847.01', 'Novel');
 INSERT INTO django_mysql.Book (BkId, BkTitle, BkAuthor, BkPublisher, BkPubDate, Category) VALUES (3, 'The Kite Runner', 'Khaled Hosseini', 'United States', '2003.05', 'Novel');
 INSERT INTO django_mysql.Book (BkId, BkTitle, BkAuthor, BkPublisher, BkPubDate, Category) VALUES (4, 'Empresses in the Palace', 'Liu Lianzi', 'China', '2007.01', 'Novel');
