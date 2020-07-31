@@ -854,44 +854,41 @@ def recommendModel(request):
         authors = []
         categories = []
         search_result_instance = {}
+        model = ''
         if mode == 1:  # based on author
+            model = 'Recommendation based on author'
             # search the books have the same author with the selected book and sorted by popularity and rating
             books = models.Book.objects.filter(BkAuthor=book.BkAuthor).order_by('-Popularity', '-Rating')
             # pick the top 10
             if len(books) >= 10:
                 books = books[:10]
-            search_result_instance['User'] = []
-            search_result_instance['Author'] = list(books)
-            search_result_instance['Book'] = []
         if mode == 2: # based on category
+            model = 'Recommendation based on category'
             # search the books have tht same category with the selected book and sorted by popularity and rating
             books = models.Book.objects.filter(Category=book.Category).order_by('-Popularity', '-Rating')
             if len(books) >= 10:
                 books = books[:10]
-            search_result_instance['User'] = []
-            search_result_instance['Author'] = []
-            search_result_instance['Book'] = list(books)
         if mode == 3: # based on rating
+            model = 'Recommendation based on rating'
             # search the books have tht similar rating with the selected book and sorted by popularity and rating
             for i in models.Book.objects.order_by('-Popularity', '-Rating').all():
                 if abs(book.Rating - i.Rating) <= 0.5:
                     books.append(i)
                 if len(books) >= 10:
                     break
-            search_result_instance['User'] = []
-            search_result_instance['Author'] = []
-            search_result_instance['Book'] = books
         if mode == 4: # based on popularity
+            model = 'Recommendation based on popularity'
             # search the books have tht similar popularity with the selected book and sorted by popularity and rating
             for i in models.Book.objects.order_by('-Popularity', '-Rating').all():
                 if abs(book.Popularity - i.Popularity) <= 2:
                     books.append(i)
                 if len(books) >= 10:
                     break
-            search_result_instance['User'] = []
-            search_result_instance['Author'] = []
-            search_result_instance['Book'] = books
         # get authors and categories of all searched book for filter function
+        search_result_instance['Recommend'] = list(books)
+        search_result_instance['User'] = []
+        search_result_instance['Author'] = []
+        search_result_instance['Book'] = []
         for i in books:
             if i.Category not in categories:
                 categories.append(i.Category)
@@ -904,7 +901,7 @@ def recommendModel(request):
                                                       'search_result_instance': search_result_instance,
                                                       "collections": Collections_instance,
                                                       'Authors': sorted(set(authors)),
-                                                      'Categories': sorted(set(categories)), 'Rate_init': 0,
+                                                      'Categories': sorted(set(categories)), 'model': model,
                                                       "recommendationmodeal": 1})
         
     else:
