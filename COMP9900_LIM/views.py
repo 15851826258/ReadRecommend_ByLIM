@@ -880,7 +880,7 @@ def recommendModel(request):
         if mode == 3: # based on rating
             model = 'Recommendation based on rating'
             # search the books have tht similar rating with the selected book and sorted by popularity and rating
-            for i in models.Book.objects.order_by('-Popularity', '-Rating').all():
+            for i in models.Book.objects.order_by('-Rating', '-Popularity').all():
                 if abs(book.Rating - i.Rating) <= 0.5:
                     books.append(i)
                 if len(books) >= 10:
