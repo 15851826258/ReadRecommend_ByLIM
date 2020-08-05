@@ -569,6 +569,8 @@ def Bkdetail(request):
         else:
             gray_stars = list(range(5))
             half_stars = list(range(0))
+        search_result.Rating = num
+        search_result.save()
         # get the current user's rating information
         rating = models.Rating.objects.filter(user_id=user_instance.UserId).filter(book_id=book_id).all()
         if len(rating) == 1:
@@ -577,6 +579,7 @@ def Bkdetail(request):
             rating_stars = 0
         rating_stars_light = int(rating_stars)
         rating_stars_gray = 5 - int(rating_stars)
+
         # if user didn't check the book detail information at their own collection page
         if not status:
             return render(request, "login/detail.html",
@@ -743,8 +746,6 @@ def addRating(request):
         if len(rating) == 1:  # if user have rated this book before
             rating[0].rating_stars = rating_stars
             rating[0].save()
-            book.Rating = rating_stars
-            book.save()
         else:
             Rating = models.Rating()  # change the record in database
             Rating.book_id = book_id
@@ -753,8 +754,6 @@ def addRating(request):
             Rating.first_rate = str(datetime.datetime.now()).split('-')[0] + '-' + str(datetime.datetime.now()).split(
                 '-')[1]
             Rating.save()
-            book.Rating = rating_stars
-            book.save()
         # reload the book detail page
         if collection_id:
             return HttpResponseRedirect(f'Bkdetail/?id={book_id}@{collection_id}')
