@@ -33,3 +33,11 @@ Prepared Demo B. Start writing the functionality parts for report.  Finished ret
 Week8
 
 Did unit tests for our completed projects. Checks all objectives we did.
+
+Week9
+
+Perfect the details of unit part of our project, write the report parts of functionalities.
+
+Week10
+
+Do report formatting and prepare the final presentation.
