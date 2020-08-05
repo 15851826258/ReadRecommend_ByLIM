@@ -690,6 +690,8 @@ def addBk(request):
             CoBk.Userid = user_instance
             CoBk.read_dates = int(request.POST['days'])
             CoBk.save()
+            user_instance.Last_add = book_id
+            user_instance.save()
             Book = models.Book.objects.get(BkId=book_id)
             Popularity = Book.Popularity
             Book.Popularity = Popularity + 1
@@ -735,11 +737,14 @@ def addRating(request):
         rating_stars = request.POST['rating_stars']  # get the user rating
         book_id = request.POST['book_id'].split('@')[0]  # get the book id
         collection_id = request.POST['book_id'].split('@')[1]  # get the collection id
+        book = models.Book.objects.get(BkId=book_id)
         # get user rating record for this book
         rating = models.Rating.objects.filter(user_id=user_instance.UserId).filter(book_id=book_id).all()
         if len(rating) == 1:  # if user have rated this book before
             rating[0].rating_stars = rating_stars
             rating[0].save()
+            book.Rating = rating_stars
+            book.save()
         else:
             Rating = models.Rating()  # change the record in database
             Rating.book_id = book_id
@@ -748,6 +753,8 @@ def addRating(request):
             Rating.first_rate = str(datetime.datetime.now()).split('-')[0] + '-' + str(datetime.datetime.now()).split(
                 '-')[1]
             Rating.save()
+            book.Rating = rating_stars
+            book.save()
         # reload the book detail page
         if collection_id:
             return HttpResponseRedirect(f'Bkdetail/?id={book_id}@{collection_id}')
