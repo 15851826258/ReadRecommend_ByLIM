@@ -1432,7 +1432,7 @@ def goal_history(request):
             if books.exists():
                 num += 1
         # check the status of completeness
-        if len(num_rating) >= int(i.goal):
+        if num >= int(i.goal):
             data.append(i.goal)
             data.append(num)
             data.append('completed')
