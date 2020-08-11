@@ -78,9 +78,9 @@ WSGI_APPLICATION = 'COMP9900.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'demo',
+        'NAME': 'django_mysql',
         'USER': 'root',
-        'PASSWORD': 'zdf0730.',
+        'PASSWORD': 'wxc123wxc',
         'HOST': 'localhost',
         'PORT': '3306'
     }
